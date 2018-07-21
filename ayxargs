@@ -12,6 +12,8 @@ var rl = readline.createInterface({
     terminal: false
 });
 var execArr = [];
+
+//获取所有的参数作为后续的指令
 var cmd = process.argv.slice(2).join(" ");
 
 function run(n) {
@@ -20,8 +22,8 @@ function run(n) {
             if (item && item != '\\')
                 execArr.push(item);
         });
+        //如果用户指定了n，则每次只处理n个输入
         while (execArr.length >= n && n > 0) {
-            //console.log('node2:', execArr.length, execArr);
             exec(cmd, execArr.slice(0, n).join(" "));
             execArr = execArr.slice(n)
         }
@@ -36,6 +38,7 @@ function run(n) {
 }
 
 function exec(cmd, file) {
+    //处理特殊字符
     file = file.replace(/`/g, '\\\`');
     file = file.replace(/#/g, '\\\#');
     file = file.replace(/\|/g, '\\\|');
@@ -47,12 +50,12 @@ function exec(cmd, file) {
     file = file.replace(/\*/g, '\\\*');
     file = file.replace(/\(/g, '\\\(');
     file = file.replace(/\)/g, '\\\)');
-    //console.log("node 1:", cmd, file);
-    if (!cmd)
+    if (!cmd) //如果用户未指定命令，则直接输出所有输入
         cmd = 'echo';
     shell.exec(cmd + " " + file);
 }
 
+//如果用户指定了n，那么每次处理n个输入，否则只处理一次
 if (process.argv[2] == '-n') {
     cmd = process.argv.slice(4).join(" ");
     run(argv.n);
