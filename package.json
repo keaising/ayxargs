@@ -3,7 +3,7 @@
   "bin": {
     "ayxargs": "ayxargs"
   },
-  "version": "1.0.1",
+  "version": "1.0.5",
   "description": "a weak xargs tool in Node.js",
   "main": "ayxargs.js",
   "directories": {
