@@ -1,0 +1,44 @@
+#!/usr/bin/env node
+var shell = require("shelljs");
+var readline = require('readline');
+var argv = require('yargs')
+    .alias('n', 'num')
+    .argv;
+
+var rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+    terminal: false
+});
+var execArr = [];
+var cmd = process.argv.slice(2).join(" ");
+function run(n) {
+    rl.on('line', function (line) {
+        line.split(' ').forEach(item => {
+            execArr.push(item);
+        });
+        while (execArr.length >= n && n > 0) {
+            exec(cmd, execArr.slice(0, n).join(" "));
+            execArr = execArr.slice(n)
+        }
+    }).on('close', function () {
+        while (execArr.length >= n && n > 0) {
+            exec(cmd, execArr.slice(0, n).join(" "));
+            execArr = execArr.slice(n)
+        }
+        if (execArr.length > 0)
+            exec(cmd, execArr.join(" "));
+    });
+}
+
+function exec(cmd, file) {
+    shell.exec(cmd + " " + file);
+}
+
+if (process.argv[2] == '-n') {
+    cmd = process.argv.slice(4).join(" ");
+    run(argv.n);
+} else {
+    cmd = process.argv.slice(2).join(" ");
+    run(-1);
+}
